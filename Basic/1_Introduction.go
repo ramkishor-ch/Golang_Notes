@@ -1,6 +1,6 @@
 // Print "Welcome to Go!" message
 
-package main //
+package main //package is a collection of common source code files
 
 import "fmt" // automatically format all codes in each file in the current directory.
 
@@ -26,6 +26,7 @@ func main() {
 
 //Types:
 //1. Executable: Generates a file that we can run
+// Example: main
 //2. Reusable: Code used as 'helpers' Good place to put reusable logic
 
 //flow:
@@ -52,7 +53,11 @@ func main() {
 //more information: golang.org/pkg
 
 // File Organization:
-// Example:
+
+// package main : package declaration
+
+// import "fmt" : Import other packages that we need
+
 //		func main() { }
 // func: declare a function
 // main: sets the name of the function
