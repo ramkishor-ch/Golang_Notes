@@ -65,3 +65,23 @@ func main() {
 // {} function body: calling function runs this code.
 
 // Reference: https://github.com/StephenGrider/GoCasts/tree/master/diagrams
+
+// Following topics is in other folders
+// Variable declaration and its types
+// Functions and return types
+// Slices and For Loops
+// Custom type declarations
+// Receiver functions
+// Slice range
+// Multiple return values
+// Byte slices
+// Type conversion from deck to string
+// Joining a slice of strings
+// Save data and Read data from harddrive
+// Error Handling
+// Random number generation
+// Testing
+// Write tests in Go
+// Asserting elements in slice
+// Testing File IO
+// Assignment
