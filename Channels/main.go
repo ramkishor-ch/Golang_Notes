@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 // Serial link checking, time consuming is more
@@ -43,10 +44,79 @@ func main() {
 	// fmt.Println(<-channel) : Wait for a value to be sent into the channel.
 	//							When we get one log it out immediately.
 
-	fmt.Printf(<-c)
+	// Blocking Channel :
+	// fmt.Printf(<-c) // only http://google.com is working because the other child go routine
+	// are waiting for receive the message.
+	// Once main routine received the message and then print it and main routine will exit it,
+	// because main routine has only received message from http://google.com only after that
+	// not received message from other facebook, stackoverflow tc.
+
+	// Receive Messages :
+	// for i := 0; i < len(links); i++ {
+	// 	fmt.Printf(<-c)
+	// }
+
+	// Repeating Routines :
+	// If I want to run same google.com for the second time then we use repeating routines.
+	// The number of messages is equal to number links we make.
+	//
+	// for i := 0; i < len(links); i++ {
+	// 	go checklink(<-c, c)
+	// }
+	// for {
+	// 	go checklink(<-c, c)
+	// }
+
+	// Infinite loop
+	// for {
+	// }
+
+	// Alternative Loop Syntax
+	// same as infinite loop but this loop provides better readbility
+	// for l := range c {
+	// 	go checklink(l, c)
+	// }
+
+	// Sleeping Routine
+	// for l := range c {
+	// 	time.Sleep(7 * time.Second) // Duration type of int64
+	// 	// Main Routine will pause for 7 seconds before next iteration of Main Routine.
+	// 	go checklink(l, c)
+	// }
+
+	// Function Literals == Lambda Function == Anonymous Function
+	// for l := range c {
+	// 	go func() {
+	// 		time.Sleep(7 * time.Second) // Duration type of int64
+	// 		// Main Routine will pause for 7 seconds before next iteration of Main Routine.
+	// 		checklink(l, c)
+	// 	}()
+	// }
+
+	// Channels Gotcha
+	// never ever share varibles directly between different child routine
+	// because a same variable from different child routine point out at same address.
+	//
+	// Recommended :
+	// Ever try to access the same variable from a different child routine wherever possible.
+	// We only share information with a child routine or a new go routine that we create by passing it in as
+	// an "argument" or communicating with the child routine over "channels".
+	for l := range c {
+		go func(l string) {
+			time.Sleep(7 * time.Second) // Duration type of int64
+			// Main Routine will pause for 7 seconds before next iteration of Main Routine.
+			checklink(l, c)
+		}(l)
+	}
 }
 
 func checklink(link string, c chan string) {
+	// purpose: checklink right now don't pause.
+
+	// In checklink() go child routine() will pause but it is not recommended
+	// to put it here because of the purpose so don't put time.Sleep in checklink()
+	// time.Sleep(7 * time.Second)
+
 	// c : variable
 	// chan : abbreviated type
 	// string : value of the type string.
@@ -58,11 +128,13 @@ func checklink(link string, c chan string) {
 
 	if err != nil {
 		fmt.Println(link, "might be down")
-		c <- "Might be down I think"
+		// c <- "Might be down I think"
+		c <- link
 		return
 	}
 	fmt.Println(link, "is working.")
-	c <- "It is working"
+	// c <- "It is working"
+	c <- link
 }
 
 //Parallel link checking, time consuming is less
